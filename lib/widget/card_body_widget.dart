@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:confirm_dialog/confirm_dialog.dart';
 
 import '../modal/items.dart';
 
-// ignore: must_be_immutable
 class CardBody extends StatelessWidget {
-  CardBody({super.key, required this.index, required this.item, required this.deleteTask});
+  const CardBody(
+      {super.key,
+      required this.index,
+      required this.item,
+      required this.deleteTask});
 
   final Function? deleteTask;
   final DataItem item;
   final int index;
-
+  
   @override
   Widget build(BuildContext context) {
+    bool isChecked = false;
+    
     return LayoutBuilder(
       builder: (context, constraints) {
         return Container(
           margin: const EdgeInsets.only(bottom: 20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: index % 2 == 0 ? const Color(0xffDFDFDF) : Colors.lightBlueAccent,
+            color: const Color(0xffDFDFDF),
           ),
           width: double.infinity,
           height: 90,
@@ -28,40 +32,61 @@ class CardBody extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                Text(
-                  item.name,
-                  style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          item.name,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Expanded(
+                        child: Text(
+                          'Date: ${item.dateTime.toLocal().toString().split(' ')[0]}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          'Time: ${item.dateTime.toLocal().toString().split(' ')[1].substring(0, 5)}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 5),
-                Text(
-                  'Date: ${item.dateTime.toLocal()}',
-                  style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black54,
-                  ),
+                StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) {
+                  return Checkbox(
+                    value: isChecked,
+                    onChanged: (bool? value) async {
+                    if (value == true) {
+                      setState(() {
+                      isChecked = true;
+                      });
+                      await Future.delayed(const Duration(seconds: 1));
+                      deleteTask!(item.id);
+                    }
+                    },
+                  );
+                  },
                 ),
-                ],
-              ),
-              InkWell(
-                onTap: () async {
-                if (await confirm(context)) {
-                  return deleteTask!(item.id);
-                }
-                return;
-                },
-                child: const Icon(
-                Icons.delete,
-                color: Colors.black,
-                size: 30,
-                ),
-              ),
               ],
             ),
           ),
