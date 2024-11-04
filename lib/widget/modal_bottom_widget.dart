@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ModalBottom extends StatefulWidget {
-  ModalBottom({super.key, required this.addTask});
+  const ModalBottom({super.key, required this.addTask});
   final Function? addTask;
 
   @override
@@ -16,7 +16,7 @@ class _ModalBottomState extends State<ModalBottom> {
   @override
   void initState() {
     super.initState();
-    selectedDate = DateTime.now(); // Khởi tạo với ngày giờ hiện tại
+    selectedDate = DateTime.now().add(const Duration(hours: 1)); // Khởi tạo với ngày giờ hiện tại
   }
 
   void _handleOnClicked(BuildContext context) {
@@ -25,51 +25,37 @@ class _ModalBottomState extends State<ModalBottom> {
     Navigator.pop(context);
   }
 
-  Future<void> _selectDateTime(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
+ Future<void> _selectDateTime(BuildContext context) async {
+    showModalBottomSheet(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2101),
-    );
-    if (pickedDate != null) {
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext builder) {
-          return Container(
-            height: MediaQuery.of(context).copyWith().size.height / 3,
-            child: Column(
-              children: [
-                Expanded(
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.time,
-                    initialDateTime: selectedDate,
-                    use24hFormat: true,
-                    onDateTimeChanged: (DateTime newDateTime) {
-                      setState(() {
-                        selectedDate = DateTime(
-                          pickedDate.year,
-                          pickedDate.month, 
-                          pickedDate.day,
-                          newDateTime.hour,
-                          newDateTime.minute,
-                        );
-                      });
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
+      builder: (BuildContext builder) {
+        return SizedBox(
+          height: MediaQuery.of(context).copyWith().size.height / 3,
+          child: Column(
+            children: [
+              Expanded(
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.dateAndTime,
+                  initialDateTime: selectedDate,
+                  use24hFormat: true,
+                  onDateTimeChanged: (DateTime newDateTime) {
+                    setState(() {
+                      selectedDate = newDateTime;
+                    });
                   },
-                  child: const Text('Done'),
                 ),
-              ],
-            ),
-          );
-        },
-      );
-    }
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Done'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -108,10 +94,10 @@ class _ModalBottomState extends State<ModalBottom> {
                     Text(
                       selectedDate == null
                         ? 'Select Date & Time'
-                        : '${selectedDate!.toLocal()}'.split(' ')[0] + ' ' + '${selectedDate!.hour.toString().padLeft(2, '0')}:${selectedDate!.minute.toString().padLeft(2, '0')}',
-                      style: TextStyle(fontSize: 16),
+                        : '${'${selectedDate!.toLocal()}'.split(' ')[0]} ${selectedDate!.hour.toString().padLeft(2, '0')}:${selectedDate!.minute.toString().padLeft(2, '0')}',
+                      style: const TextStyle(fontSize: 16),
                     ),
-                    Icon(Icons.calendar_today),
+                    const Icon(Icons.calendar_today),
                   ],
                 ),
               ),

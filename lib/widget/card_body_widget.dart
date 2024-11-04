@@ -12,11 +12,11 @@ class CardBody extends StatelessWidget {
   final Function? deleteTask;
   final DataItem item;
   final int index;
-  
+
   @override
   Widget build(BuildContext context) {
     bool isChecked = false;
-    
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return Container(
@@ -50,17 +50,7 @@ class CardBody extends StatelessWidget {
                       const SizedBox(height: 5),
                       Expanded(
                         child: Text(
-                          'Date: ${item.dateTime.toLocal().toString().split(' ')[0]}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          'Time: ${item.dateTime.toLocal().toString().split(' ')[1].substring(0, 5)}',
+                          'At ${item.dateTime.toLocal().toString().split(' ')[1].substring(0, 5)}',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black54,
@@ -73,18 +63,18 @@ class CardBody extends StatelessWidget {
                 ),
                 StatefulBuilder(
                   builder: (BuildContext context, StateSetter setState) {
-                  return Checkbox(
-                    value: isChecked,
-                    onChanged: (bool? value) async {
-                    if (value == true) {
-                      setState(() {
-                      isChecked = true;
-                      });
-                      await Future.delayed(const Duration(seconds: 1));
-                      deleteTask!(item.id);
-                    }
-                    },
-                  );
+                    return Checkbox(
+                      value: isChecked,
+                      onChanged: (bool? value) async {
+                        if (value == true) {
+                          setState(() {
+                            isChecked = true;
+                          });
+                          await Future.delayed(const Duration(seconds: 1));
+                          deleteTask!(item.id);
+                        }
+                      },
+                    );
                   },
                 ),
               ],
