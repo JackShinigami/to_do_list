@@ -20,12 +20,12 @@ class _ModalBottomState extends State<ModalBottom> {
   }
 
   void _handleOnClicked(BuildContext context) {
-    if (controller.text.isEmpty) return;
+    if (controller.text.isEmpty || selectedDate == null) return;
     widget.addTask!(controller.text, selectedDate);
     Navigator.pop(context);
   }
 
- Future<void> _selectDateTime(BuildContext context) async {
+  Future<void> _selectDateTime(BuildContext context) async {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext builder) {
@@ -64,18 +64,31 @@ class _ModalBottomState extends State<ModalBottom> {
       padding: MediaQuery.of(context).viewInsets,
       child: Container(
         decoration: const BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            color: Colors.white),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          color: Colors.white,
+        ),
         padding: const EdgeInsets.all(20),
-        height: 300,
+        height: 350,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Text(
+              'Add New Task',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
             TextField(
               controller: controller,
               autofocus: true, // Automatically focus when modal bottom is opened
-              decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              label: Text('Your Task'),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                labelText: 'Your Task',
+                hintText: 'Enter task name',
               ),
               onSubmitted: (_) => _handleOnClicked(context),
             ),
@@ -86,7 +99,7 @@ class _ModalBottomState extends State<ModalBottom> {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,9 +119,20 @@ class _ModalBottomState extends State<ModalBottom> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                  onPressed: () => _handleOnClicked(context),
-                  child: const Text('Add Task')),
-            )
+                onPressed: () => _handleOnClicked(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor, // Use the theme's primary color
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  'Add Task',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ),
           ],
         ),
       ),

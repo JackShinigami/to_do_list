@@ -62,14 +62,14 @@ class NotificationService {
     }
   }
 
-  Future<void> scheduleNotificationBefore(
+  Future<void> scheduleNotificationBefore(int notificationId,
       String taskName, DateTime dateTime, int minutesBefore) async {
     final tz.TZDateTime scheduledTime = tz.TZDateTime.from(
         dateTime.subtract(Duration(minutes: minutesBefore)), tz.local);
 
     try {
       await _notificationsPlugin.zonedSchedule(
-        0,
+        notificationId,
         "Task Reminder",
         "Your task: $taskName is due in $minutesBefore minutes",
         scheduledTime,
@@ -98,5 +98,14 @@ class NotificationService {
       ),
       iOS: DarwinNotificationDetails(),
     );
+  }
+
+  Future<void> cancelNotification(int notificationId) async {
+    try {
+      await _notificationsPlugin.cancel(notificationId);
+      debugPrint('Notification cancelled successfully');
+    } catch (e) {
+      debugPrint('Error cancelling notification: $e');
+    }
   }
 }

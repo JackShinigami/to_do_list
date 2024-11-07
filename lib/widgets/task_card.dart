@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../modal/items.dart';
+import '../modal/task.dart';
 
-class CardBody extends StatelessWidget {
-  const CardBody(
-      {super.key,
-      required this.index,
-      required this.item,
-      required this.deleteTask});
+class TaskCard extends StatelessWidget {
+  const TaskCard({
+    super.key,
+    required this.index,
+    required this.item,
+    required this.deleteTask,
+  });
 
   final Function? deleteTask;
-  final DataItem item;
+  final Task item;
   final int index;
 
   @override
@@ -22,13 +23,21 @@ class CardBody extends StatelessWidget {
         return Container(
           margin: const EdgeInsets.only(bottom: 20),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: const Color(0xffDFDFDF),
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
           width: double.infinity,
-          height: 90,
+          height: 100,
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -49,13 +58,23 @@ class CardBody extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Expanded(
-                        child: Text(
-                          'At ${item.dateTime.toLocal().toString().split(' ')[1].substring(0, 5)}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
-                          ),
-                          overflow: TextOverflow.ellipsis,
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.access_time,
+                              size: 16,
+                              color: Colors.black54,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              'At ${item.dateTime.toLocal().toString().split(' ')[1].substring(0, 5)}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black54,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                     ],
